@@ -16,8 +16,9 @@ idx = pd.IndexSlice
 
 import numpy as np
 import pypsa
-from _helpers import override_component_attrs, update_config_with_sector_opts
+from _helpers import override_component_attrs, update_config_with_sector_opts, group_mapping, bus_mapping
 from add_existing_baseyear import add_build_year_to_new_assets
+from prepare_sector_network import add_co2price, define_spatial, get
 
 
 def add_brownfield(n, n_p, year):
@@ -155,6 +156,14 @@ if __name__ == "__main__":
     n_p = pypsa.Network(snakemake.input.network_p, override_component_attrs=overrides)
 
     add_brownfield(n, n_p, year)
+
+    spatial = define_spatial(n.buses[n.buses.carrier == "AC"].index, options)
+    options = snakemake.params.sector
+
+    opts = snakemake.wildcards.sector_opts.split("-")
+    if "CO2P" in opts:
+        co2_p = get(snakemake.params.co2_price, year)
+        add_co2price(n, group_mapping, bus_mapping, co2_p)
 
     n.meta = dict(snakemake.config, **dict(wildcards=dict(snakemake.wildcards)))
     n.export_to_netcdf(snakemake.output[0])

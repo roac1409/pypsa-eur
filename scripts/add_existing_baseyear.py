@@ -21,9 +21,9 @@ import country_converter as coco
 import numpy as np
 import pypsa
 import xarray as xr
-from _helpers import override_component_attrs, update_config_with_sector_opts
+from _helpers import override_component_attrs, update_config_with_sector_opts, group_mapping, bus_mapping
 from add_electricity import sanitize_carriers
-from prepare_sector_network import cluster_heat_buses, define_spatial, prepare_costs
+from prepare_sector_network import cluster_heat_buses, define_spatial, prepare_costs, add_co2price
 
 cc = coco.CountryConverter()
 
@@ -550,6 +550,7 @@ def add_heating_capacities_installed_before_baseyear(
                 / costs.at[name_type + " gas boiler", "efficiency"],
                 build_year=int(grouping_year),
                 lifetime=costs.at[name_type + " gas boiler", "lifetime"],
+                marginal_cost=0,
             )
 
             n.madd(
@@ -570,6 +571,7 @@ def add_heating_capacities_installed_before_baseyear(
                 / costs.at["decentral oil boiler", "efficiency"],
                 build_year=int(grouping_year),
                 lifetime=costs.at[name_type + " gas boiler", "lifetime"],
+                marginal_cost=0,
             )
 
             # delete links with p_nom=nan corresponding to extra nodes in country
@@ -636,6 +638,10 @@ if __name__ == "__main__":
     add_power_capacities_installed_before_baseyear(
         n, grouping_years_power, costs, baseyear
     )
+
+    if "CO2P" in opts:
+        co2_p = get(snakemake.params.co2_price, baseyear)
+        add_co2price(n, group_mapping, bus_mapping, co2_p)
 
     if "H" in opts:
         time_dep_hp_cop = options["time_dep_hp_cop"]
