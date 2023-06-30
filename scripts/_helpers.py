@@ -447,3 +447,50 @@ def update_config_with_sector_opts(config, sector_opts):
         if o.startswith("CF+"):
             l = o.split("+")[1:]
             update_config(config, parse(l))
+
+
+
+group_mapping = {
+    "Group_1": {
+        "links": [
+            "DAC", 
+            "urban central solid biomass CHP CC",
+            "biomass to liquid CC",
+            "BioSNG CC",
+            "solid biomass for industry CC",
+            ],"atmosphere": 0, "stored": -1},
+    "Group_2": {
+        "links": [
+            "co2_vent",
+            "process emissions",
+            "process emissions CC",
+            "gas for industry",
+            "gas for industry CC",
+            "SMR","SMR CC",
+            "residential rural gas boiler",
+            "services rural gas boiler"
+            "residential urban decentral gas boiler",
+            "services urban decentral gas boiler",
+            "urban central gas boiler",
+            "urban central gas CHP",
+            "urban central gas CHP CC",
+            "residential rural oil boiler",
+            "services rural oil boiler",
+            "residential urban decentral oil boiler",
+            "services urban decentral oil boiler",
+            "oil",
+            "OCGT", 
+            "CCGT", 
+            "coal", 
+            "lignite",
+            "coal_cc",            
+             ], "atmosphere": 1, "stored": 0},
+}
+
+bus_mapping = {
+    "bus0": {"efficiency": "efficiency"},
+    "bus1": {"efficiency": "efficiency"},
+    "bus2": {"efficiency": "efficiency2"},
+    "bus3": {"efficiency": "efficiency3"},
+    "bus4": {"efficiency": "efficiency4"},
+}
