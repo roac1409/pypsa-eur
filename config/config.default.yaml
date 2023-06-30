@@ -89,6 +89,17 @@ co2_budget:
   2045: 0.032
   2050: 0.000
 
+# Co2 price applied if CO2P is in sector_opts
+co2_price:
+  2020: 0
+  2025: 0
+  2030: 0
+  2035: 0
+  2040: 0
+  2045: 0
+  2050: 0
+
+
 electricity:
   voltages: [220., 300., 380.]
   gaslimit: false # global gas usage limit of X MWh_th
