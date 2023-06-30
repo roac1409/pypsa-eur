@@ -3264,55 +3264,6 @@ def set_temporal_aggregation(n, opts, solver_name):
             break
     return n
 
-def add_co2price(n, group_mapping, bus_mapping, co2_price):
-    for link in n.links.index:
-        carrier = n.links.loc[link, "carrier"]
-        for group in group_mapping.values():
-            if carrier in group["links"]:
-                atmosphere = group["atmosphere"]
-                stored = group["stored"]
-                break  # Exit the loop once a match is found
-        else:
-            continue  # Skip to the next link if no match is found
-
-        # Check the presence of bus0 through bus4 columns in n.links
-        buses_present = []
-        for bus_num in range(5):  # Check up to bus4 (inclusive)
-            bus_column = f"bus{bus_num}"
-            if bus_column in n.links.columns:
-                bus_value = n.links.loc[link, bus_column]
-                buses_present.append(bus_value)
-
-        carry = n.links.loc[link, "carrier"]
-
-        # Find the buses connected to "co2 atmosphere" and spatial.co2.nodes
-        bus_atmosphere = None
-        bus_stored = None
-        for bus_value in buses_present:
-            if bus_value == "co2 atmosphere":
-                bus_atmosphere = f"bus{buses_present.index(bus_value)}"
-            elif "co2 stored" in bus_value:
-                bus_stored = f"bus{buses_present.index(bus_value)}"
-
-        # Calculate the cost based on the connected buses
-        total_cost = 0
-        if bus_atmosphere:
-            efficiency = bus_mapping.get(bus_atmosphere, {}).get("efficiency")
-            value = n.links.loc[link,efficiency] 
-            total_cost += atmosphere * value
-        if bus_stored:
-            efficiency = bus_mapping.get(bus_stored, {}).get("efficiency")       
-            value = n.links.loc[link,efficiency]
-            total_cost += stored * n.links.loc[link, efficiency]
-
-        co2_cost = co2_price * total_cost
-        n.links.loc[link, "marginal_cost"] += co2_cost
-
-        marginal = n.links.loc[link, "marginal_cost"]
-    
-    return n
-
-
 
 if __name__ == "__main__":
     if "snakemake" not in globals():
@@ -3427,10 +3378,6 @@ if __name__ == "__main__":
 
     if options["allam_cycle"]:
         add_allam(n, costs)
-
-    if "CP" in opts:
-        co2_price = get(snakemake.params.co2_price, investment_year)
-        add_emission_costs_to_links(n, group_mapping, bus_mapping, co2_price)
 
     solver_name = snakemake.config["solving"]["solver"]["name"]
     n = set_temporal_aggregation(n, opts, solver_name)
