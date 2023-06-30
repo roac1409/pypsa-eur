@@ -468,7 +468,7 @@ group_mapping = {
             "gas for industry CC",
             "SMR","SMR CC",
             "residential rural gas boiler",
-            "services rural gas boiler"
+            "services rural gas boiler",
             "residential urban decentral gas boiler",
             "services urban decentral gas boiler",
             "urban central gas boiler",

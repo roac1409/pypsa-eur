@@ -21,6 +21,8 @@ from _helpers import (
     generate_periodic_profiles,
     override_component_attrs,
     update_config_with_sector_opts,
+    group_mapping,
+    bus_mapping,
 )
 from add_electricity import calculate_annuity, sanitize_carriers
 from build_energy_totals import build_co2_totals, build_eea_co2, build_eurostat_co2
@@ -3264,7 +3266,7 @@ def set_temporal_aggregation(n, opts, solver_name):
             break
     return n
 
-def add_co2price(n, group_mapping, bus_mapping, co2_price):
+def add_co2price(n, group_mapping, bus_mapping, co2_p):
     for link in n.links.index:
         carrier = n.links.loc[link, "carrier"]
         for group in group_mapping.values():
@@ -3305,7 +3307,7 @@ def add_co2price(n, group_mapping, bus_mapping, co2_price):
             value = n.links.loc[link,efficiency]
             total_cost += stored * n.links.loc[link, efficiency]
 
-        co2_cost = co2_price * total_cost
+        co2_cost = co2_p * total_cost
         n.links.loc[link, "marginal_cost"] += co2_cost
 
         marginal = n.links.loc[link, "marginal_cost"]
@@ -3428,9 +3430,9 @@ if __name__ == "__main__":
     if options["allam_cycle"]:
         add_allam(n, costs)
 
-    if "CP" in opts:
-        co2_price = get(snakemake.params.co2_price, investment_year)
-        add_emission_costs_to_links(n, group_mapping, bus_mapping, co2_price)
+    if "CO2P" in opts:
+        co2_p = get(snakemake.params.co2_price, investment_year)
+        add_co2price(n, group_mapping, bus_mapping, co2_p)
 
     solver_name = snakemake.config["solving"]["solver"]["name"]
     n = set_temporal_aggregation(n, opts, solver_name)
