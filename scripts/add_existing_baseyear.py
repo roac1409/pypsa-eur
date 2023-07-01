@@ -23,7 +23,7 @@ import pypsa
 import xarray as xr
 from _helpers import override_component_attrs, update_config_with_sector_opts, group_mapping, bus_mapping
 from add_electricity import sanitize_carriers
-from prepare_sector_network import cluster_heat_buses, define_spatial, prepare_costs, add_co2price
+from prepare_sector_network import cluster_heat_buses, define_spatial, get, prepare_costs, add_co2price
 
 cc = coco.CountryConverter()
 
