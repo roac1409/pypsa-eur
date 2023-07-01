@@ -707,6 +707,7 @@ rule build_transport_demand:
 rule prepare_sector_network:
     params:
         co2_budget=config["co2_budget"],
+        co2_price=config["co2_price"],
         conventional_carriers=config["existing_capacities"]["conventional_carriers"],
         foresight=config["foresight"],
         costs=config["costs"],
