@@ -783,7 +783,6 @@ def add_generation(n, costs):
             efficiency=costs.at[generator, "efficiency"],
             efficiency2=costs.at[carrier, "CO2 intensity"],
             lifetime=costs.at[generator, "lifetime"],
-            marginal_cost=0,
         )
 
 
