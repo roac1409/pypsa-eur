@@ -484,6 +484,7 @@ def calculate_weighted_prices(n, label, weighted_prices):
             "heat pump",
             "resistive heater",
             "battery charger",
+            "flow battery charger",
             "H2 Electrolysis",
         ],
         "heat": ["water tanks charger"],

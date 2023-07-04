@@ -49,6 +49,7 @@ def rename_techs(label):
         # "H2 Fuel Cell": "hydrogen storage",
         # "H2 pipeline": "hydrogen storage",
         "battery": "battery storage",
+        "flow battery": "flow battery storage",
         # "CC": "CC"
     }
 
@@ -124,6 +125,7 @@ preferred_order = pd.Index(
         "power-to-gas",
         "power-to-liquid",
         "battery storage",
+        "flow battery storage",
         "hot water storage",
         "CO2 sequestration",
     ]

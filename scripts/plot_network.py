@@ -855,6 +855,7 @@ def plot_series(network, carrier="AC", name="test"):
             "methanation",
             "hydrogen storage",
             "battery storage",
+            "flow battery storage",
             "hot water storage",
         ]
     )

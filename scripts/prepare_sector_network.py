@@ -1338,6 +1338,44 @@ def add_storage_and_grids(n, costs):
         lifetime=costs.at["battery inverter", "lifetime"],
     )
 
+    n.add("Carrier", "flow battery")
+
+    n.madd("Bus", nodes + " flow battery", location=nodes, carrier="flow battery", unit="MWh_el")
+
+    n.madd(
+        "Store",
+        nodes + " flow battery",
+        bus=nodes + " flow battery",
+        e_cyclic=True,
+        e_nom_extendable=True,
+        carrier="flow battery",
+        capital_cost=costs.at["Vanadium-Redox-Flow-store", "fixed"],
+        lifetime=costs.at["Vanadium-Redox-Flow-store", "lifetime"],
+    )
+
+    n.madd(
+        "Link",
+        nodes + " flow battery charger",
+        bus0=nodes,
+        bus1=nodes + " flow battery",
+        carrier="flow battery charger",
+        efficiency=costs.at["Vanadium-Redox-Flow-bicharger", "efficiency"] ,
+        capital_cost=costs.at["Vanadium-Redox-Flow-bicharger", "fixed"],
+        p_nom_extendable=True,
+        lifetime=costs.at["Vanadium-Redox-Flow-bicharger", "lifetime"],
+    )
+
+    n.madd(
+        "Link",
+        nodes + " flow battery discharger",
+        bus0=nodes + " flow battery",
+        bus1=nodes,
+        carrier="flow battery discharger",
+        efficiency=costs.at["Vanadium-Redox-Flow-bicharger", "efficiency"],
+        p_nom_extendable=True,
+        lifetime=costs.at["Vanadium-Redox-Flow-bicharger", "lifetime"],
+    )
+
     if options["methanation"]:
         n.madd(
             "Link",
