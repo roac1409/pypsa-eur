@@ -158,7 +158,6 @@ if __name__ == "__main__":
     add_brownfield(n, n_p, year)
 
     options = snakemake.params.sector
-    spatial = define_spatial(pop_layout.index, options)
 
     opts = snakemake.wildcards.sector_opts.split("-")
     if "CO2P" in opts:
